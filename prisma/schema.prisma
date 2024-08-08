@@ -20,5 +20,54 @@ model Session {
   expiresAt   DateTime
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  username  String  @unique
+  email     String  @unique
+  password  String
+  folders   Folder[]  
+  files     File[]
+  role      Role    @default(USER)
+
+  @@map("users")
+}
+
+model Folder {
+  id           Int        @id @default(autoincrement())
+  owner        User       @relation(fields: [ownerId], references: [id]) 
+  ownerId      Int        @map("user_id")
+  title        String     @default("New Folder")
+  parent       Folder?    @relation("folderHierarchy", fields: [parentId], references: [id])
+  parentId     Int?       @map("parent_id")
+  description  String?  
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime?  @map("updated_at")
+  folders      Folder[]   @relation("folderHierarchy")
+  files        File[]
+  sizeBytes    Int        @map("size_bytes")
+  isRoot       Boolean    @default(false) @map("root")
+
+   @@map("folders")
+}
+
+model File {
+  id          Int        @default(autoincrement())
+  owner       User       @relation(fields: [ownerId], references: [id])
+  ownerId     Int        @map("user_id")
+  parent      Folder?    @relation(fields: [parentId], references: [id])
+  parentId    Int?       @map("parent_id")
+  title       String     @unique
+  dataUrl     String     @map("data_url") @unique 
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime?  @map("updated_at")
+  sizeBytes   Int        @map("size_bytes")
+
+   @@map("files")
+}
 
 
