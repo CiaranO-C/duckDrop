@@ -1,0 +1,24 @@
+<% if(modal) { %>
+    <%- include('partials/new-folder') %>
+<% } %>
+<h1>Welcome back, <%= currentUser.username %></h1>
+<h2><%= currentFolder.title %></h2>
+<a href="/user/folder/<%= currentFolder.id %>?create=true">New folder</a>
+<a href="/upload-file">Upload file</a>
+<main>
+    <div class="folder-path">
+        <% if(currentFolder.parent) { %>
+            <a href="/user/folder/<%= parent.id %>"><%= parent.title %></a><span>></span>
+        <% } %>
+        <a href="/user/folder/<%= currentFolder.id %>"><%= currentFolder.title %></a>
+    </div>
+    <% if(currentFolder.folders) { %>
+        <% currentFolder.folders.forEach(folder => { %>
+            <a class="folderCard" href="/user/folder/<%= folder.id %>">
+                <p><%= folder.title %></p>
+            </a>
+        <% }) %>
+    <% } else { %>
+        <p>No folders yet</p>
+    <% } %>
+</main>
