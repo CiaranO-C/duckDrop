@@ -39,7 +39,7 @@ passport.serializeUser((user, done) => {
 //populates request object with user data
 passport.deserializeUser(async (userId, done) => {
   try {
-    const user = await prisma.session.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: userId,
       },
